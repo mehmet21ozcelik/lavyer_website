@@ -33,7 +33,10 @@ export async function POST(request: Request) {
             value: token,
             httpOnly: true,
             path: '/',
-            secure: process.env.NODE_ENV === 'production',
+            // IP üzerinden HTTP ile giriş yapılabilmesi için esnetildi. 
+            // SSL (HTTPS) kurulduğunda tekrar true yapılması önerilir.
+            //secure: process.env.NODE_ENV === 'production',
+            secure: false, // Set to true only when using HTTPS (SSL). Loosened to allow login via IP/HTTP.
             maxAge: 60 * 60 * 24 // 24 hours
         });
 
