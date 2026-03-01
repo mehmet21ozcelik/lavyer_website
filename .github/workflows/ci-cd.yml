@@ -65,6 +65,8 @@ jobs:
           context: .
           push: false
           tags: lavyer_website:latest
+          build-args: |
+            DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy?schema=public
 
   deploy:
     needs: docker-build

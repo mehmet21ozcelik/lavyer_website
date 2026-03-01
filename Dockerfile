@@ -22,6 +22,10 @@ RUN npx prisma generate
 # Next.js telemetry disable
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# Provide dummy/real DATABASE_URL for build phase
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
 # Build the Next.js app
 RUN npm run build
 
