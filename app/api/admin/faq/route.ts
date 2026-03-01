@@ -14,6 +14,9 @@ export async function GET() {
     }
 }
 
+import { revalidateTag } from 'next/cache';
+import { CACHE_TAGS } from '@/lib/cache/tags';
+
 export async function POST(req: Request) {
     try {
         const body = await req.json();
@@ -31,6 +34,8 @@ export async function POST(req: Request) {
                 practiceAreaId: practiceAreaId || null
             }
         });
+
+        revalidateTag(CACHE_TAGS.faqs);
 
         return NextResponse.json(newFaq, { status: 201 });
     } catch (error) {

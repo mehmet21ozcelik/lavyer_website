@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { revalidateTag } from 'next/cache';
+import { CACHE_TAGS } from '@/lib/cache/tags';
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
     try {
@@ -36,6 +38,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
             }
         });
 
+        revalidateTag(CACHE_TAGS.faqs);
+
         return NextResponse.json(updatedFaq);
     } catch (error) {
         return NextResponse.json({ error: 'Güncelleme hatası' }, { status: 500 });
@@ -47,6 +51,8 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         await prisma.fAQ.delete({
             where: { id: params.id }
         });
+
+        revalidateTag(CACHE_TAGS.faqs);
 
         return NextResponse.json({ success: true });
     } catch (error) {

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db/prisma';
+
 import FAQAccordion from '@/components/ui/FAQAccordion';
 
 export const metadata = {
@@ -6,18 +6,14 @@ export const metadata = {
     description: 'Hukuki süreçler, davalar, avukatlık ücretleri ve aklınıza takılan diğer soruların cevaplarını bu sayfada bulabilirsiniz.',
 };
 
+export const dynamic = 'force-dynamic';
+
+import { getFaqs } from '@/modules/faq/services/faqService';
+
 export default async function FAQPage() {
-    // Fetch FAQs from DB, ordered by the 'order' field
     let faqs: any[] = [];
     try {
-        faqs = await prisma.fAQ.findMany({
-            orderBy: { order: 'asc' },
-            select: {
-                id: true,
-                question: true,
-                answer: true,
-            }
-        });
+        faqs = await getFaqs();
     } catch (error) {
         console.error('Failed to load FAQs:', error);
     }
