@@ -55,8 +55,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # `docker exec -it <container> npx prisma migrate deploy`
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 # Prisma Engine is in node_modules, node_modules is inside standalone but we might need explicit copying
-# if we plan to run npx prisma inside the container. Since the spec asks to support "npm run prisma:migrate:deploy"
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 USER nextjs
 
