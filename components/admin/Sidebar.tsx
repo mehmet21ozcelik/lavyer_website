@@ -19,6 +19,7 @@ export default function Sidebar() {
         { label: 'Makaleler', href: '/admin/blog' },
         { label: 'Hizmetler', href: '/admin/services' },
         { label: 'Şehirler', href: '/admin/cities' },
+        { label: 'SSS', href: '/admin/faq' },
     ];
 
     return (

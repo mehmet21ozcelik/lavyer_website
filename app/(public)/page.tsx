@@ -1,5 +1,6 @@
 import { LegalServiceSchema } from '@/components/seo/SchemaOrg';
 import { prisma } from '@/lib/db/prisma';
+import Image from 'next/image';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,6 +11,16 @@ export default async function Home() {
       take: 6,
       orderBy: { name: 'asc' },
       select: { id: true, name: true, slug: true, seo: true }
+    });
+  } catch (e) { }
+
+  let latestPosts: any[] = [];
+  try {
+    latestPosts = await prisma.blogPost.findMany({
+      take: 3,
+      where: { status: 'PUBLISHED' },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, title: true, slug: true, excerpt: true, createdAt: true, practiceArea: true }
     });
   } catch (e) { }
 
@@ -79,6 +90,72 @@ export default async function Home() {
                 <p>{service.seo?.description || 'Diyarbakır ve çevre illerde profesyonel hukuki danışmanlık ve dava takip hizmeti.'}</p>
                 <div style={{ color: 'var(--secondary-color)', fontWeight: 'bold', marginTop: '1rem' }}>Detaylı İncele &rarr;</div>
               </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Latest Blog Posts using Modern Grid layout */}
+      <section className="section-padding" style={{ backgroundColor: '#f9f9fb', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
+        <div className="container">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+            <div>
+              <span style={{ color: 'var(--secondary-color)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>
+                Hukuk Blogu
+              </span>
+              <h2 style={{ color: 'var(--primary-color)', margin: '0.5rem 0 0', fontFamily: 'var(--font-heading)' }}>
+                Güncel Yazılar
+              </h2>
+            </div>
+            <a href="/blog" className="btn btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>
+              Tümünü Gör &rarr;
+            </a>
+          </div>
+
+          <div className="grid grid-3">
+            {latestPosts.map(post => (
+              <article key={post.id} className="card" style={{
+                display: 'flex', flexDirection: 'column', padding: '1.5rem',
+                border: '1px solid var(--border-color)', backgroundColor: 'var(--white)',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
+              }}>
+                <div style={{
+                  width: '100%', height: '180px', backgroundColor: 'var(--border-color)',
+                  borderRadius: '4px', marginBottom: '1.5rem', position: 'relative', overflow: 'hidden'
+                }}>
+                  {(post.seo as any)?.ogImage ? (
+                    <Image
+                      src={(post.seo as any).ogImage}
+                      alt={post.title}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom right, var(--primary-color), var(--secondary-color))', opacity: 0.1 }} />
+                  )}
+                </div>
+                <div style={{ flex: 1 }}>
+                  {post.practiceArea && (
+                    <span style={{ fontSize: '0.75rem', color: 'var(--secondary-color)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      {post.practiceArea.name}
+                    </span>
+                  )}
+                  <h3 style={{ fontSize: '1.25rem', margin: '0.5rem 0 1rem', fontFamily: 'var(--font-heading)', lineHeight: '1.4' }}>
+                    <a href={`/blog/${post.slug}`} style={{ color: 'var(--primary-color)' }}>{post.title}</a>
+                  </h3>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                    {post.excerpt && post.excerpt.length > 90 ? `${post.excerpt.substring(0, 90)}...` : post.excerpt}
+                  </p>
+                </div>
+                <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                    {new Date(post.createdAt).toLocaleDateString('tr-TR')}
+                  </span>
+                  <a href={`/blog/${post.slug}`} style={{ fontWeight: 600, color: 'var(--secondary-color)', fontSize: '0.9rem' }}>
+                    Devamı &rsaquo;
+                  </a>
+                </div>
+              </article>
             ))}
           </div>
         </div>

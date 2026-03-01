@@ -4,8 +4,21 @@ import AdminPageHeader from '@/components/admin/AdminPageHeader';
 
 export const revalidate = 0; // Don't cache admin listing
 
-export default async function AdminBlogList() {
+export default async function AdminBlogList({
+    searchParams
+}: {
+    searchParams: { page?: string }
+}) {
+    const currentPage = Number(searchParams.page) || 1;
+    const itemsPerPage = 10;
+
+    // Total count for pagination
+    const totalPosts = await prisma.blogPost.count();
+    const totalPages = Math.ceil(totalPosts / itemsPerPage);
+
     const posts = await prisma.blogPost.findMany({
+        take: itemsPerPage,
+        skip: (currentPage - 1) * itemsPerPage,
         orderBy: { createdAt: 'desc' },
         include: { practiceArea: true }
     });
@@ -74,6 +87,54 @@ export default async function AdminBlogList() {
                         ))}
                     </tbody>
                 </table>
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                    <div style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-color)', backgroundColor: '#f9fafb' }}>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                            Toplam <strong>{totalPosts}</strong> kayıttan <strong>{(currentPage - 1) * itemsPerPage + 1}</strong> - <strong>{Math.min(currentPage * itemsPerPage, totalPosts)}</strong> arası gösteriliyor.
+                        </div>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            {currentPage > 1 && (
+                                <Link
+                                    href={`/admin/blog?page=${currentPage - 1}`}
+                                    style={{ padding: '0.4rem 0.8rem', border: '1px solid var(--border-color)', borderRadius: '4px', fontSize: '0.85rem', backgroundColor: 'white' }}
+                                >
+                                    &laquo; Önceki
+                                </Link>
+                            )}
+
+                            {Array.from({ length: totalPages }).map((_, i) => {
+                                const pageNum = i + 1;
+                                return (
+                                    <Link
+                                        key={pageNum}
+                                        href={`/admin/blog?page=${pageNum}`}
+                                        style={{
+                                            padding: '0.4rem 0.8rem',
+                                            borderRadius: '4px',
+                                            backgroundColor: currentPage === pageNum ? 'var(--primary-color)' : 'white',
+                                            color: currentPage === pageNum ? 'white' : 'inherit',
+                                            border: '1px solid var(--border-color)',
+                                            fontSize: '0.85rem'
+                                        }}
+                                    >
+                                        {pageNum}
+                                    </Link>
+                                );
+                            })}
+
+                            {currentPage < totalPages && (
+                                <Link
+                                    href={`/admin/blog?page=${currentPage + 1}`}
+                                    style={{ padding: '0.4rem 0.8rem', border: '1px solid var(--border-color)', borderRadius: '4px', fontSize: '0.85rem', backgroundColor: 'white' }}
+                                >
+                                    Sonraki &raquo;
+                                </Link>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

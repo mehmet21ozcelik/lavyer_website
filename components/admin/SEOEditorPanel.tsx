@@ -80,6 +80,25 @@ export default function SEOEditorPanel({ seo, onChange, defaultTitle, defaultDes
                 </div>
 
                 <div>
+                    <label style={{ display: 'block', fontWeight: 500, marginBottom: '0.5rem' }}>Kapak Resmi (og:image) URL'si</label>
+                    <input
+                        type="url"
+                        name="ogImage"
+                        value={seo.ogImage || ''}
+                        onChange={handleChange}
+                        placeholder="https://.../resim.jpg"
+                        style={{ width: '100%', padding: '0.75rem', border: '1px solid var(--border-color)', borderRadius: '4px' }}
+                    />
+                    <small style={{ color: 'gray', display: 'block', marginTop: '0.25rem' }}>Ana sayfa blog kartlarında ve sosyal medya paylaşımlarında görünecek olan kapak resminin tam URL adresini buraya girin.</small>
+
+                    {seo.ogImage && (
+                        <div style={{ marginTop: '0.5rem' }}>
+                            <img src={seo.ogImage} alt="Kapak önizleme" style={{ maxWidth: '100%', maxHeight: '120px', borderRadius: '4px', objectFit: 'cover' }} />
+                        </div>
+                    )}
+                </div>
+
+                <div>
                     <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
                         <input
                             type="checkbox"

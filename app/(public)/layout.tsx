@@ -39,6 +39,7 @@ export default function RootLayout({
                 <li><a href="/hakkimizda">Hakkımızda</a></li>
                 <li><a href="/hizmetler">Hizmetlerimiz</a></li>
                 <li><a href="/blog">Hukuk Blogu</a></li>
+                <li><a href="/sikca-sorulan-sorular">SSS</a></li>
                 <li><a href="/iletisim">İletişim</a></li>
               </ul>
             </nav>
@@ -62,6 +63,7 @@ export default function RootLayout({
                   <li><a href="/hakkimizda">Hakkımızda</a></li>
                   <li><a href="/hizmetler">Çalışma Alanlarımız</a></li>
                   <li><a href="/blog">Güncel Makaleler</a></li>
+                  <li><a href="/sikca-sorulan-sorular">Sıkça Sorulan Sorular</a></li>
                   <li><a href="/iletisim">Bize Ulaşın</a></li>
                 </ul>
               </div>
