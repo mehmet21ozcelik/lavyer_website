@@ -63,5 +63,29 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: false # Set to true and add secrets if you have a registry
+          push: false
           tags: lavyer_website:latest
+
+  deploy:
+    needs: docker-build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    steps:
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd lavyer_website
+            # Fetch and reset to avoid local conflict issues
+            git fetch origin master
+            git reset --hard origin/master
+            # Rebuild and start the app container
+            docker compose up -d --build app
+            # Sync database schema
+            docker compose exec -T app npx prisma db push
+            echo "Deployment successful!"
+
