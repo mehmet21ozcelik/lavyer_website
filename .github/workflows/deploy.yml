@@ -85,7 +85,9 @@ jobs:
             # Fetch and reset to avoid local conflict issues
             git fetch origin master
             git reset --hard origin/master
-            # Rebuild and start the app container
+            # Ensure the web-network exists on the server (safety check)
+            docker network create web-network 2>/dev/null || true
+            # Rebuild and start the app container (NPM handles routing)
             docker compose up -d --build app
             # Sync database schema
             docker compose exec -T app npx prisma db push
