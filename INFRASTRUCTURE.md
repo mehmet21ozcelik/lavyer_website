@@ -94,12 +94,29 @@ The uploaded media is stored in the `public/uploads` directory inside the contai
    cat backup.sql | docker exec -i [CONTAINER_ID_DB] psql -U [USER] -d [DB_NAME]
    ```
 
-## 5. Reverse Proxy Setup (Nginx)
+## 5. Reverse Proxy Setup (Nginx Proxy Manager)
 
-The application is pre-configured with Nginx.
-- **Port 80**: Redirects incoming HTTP traffic to the Next.js app on port 3000.
-- **Static Headers**: Includes proxy headers for real IP and protocol forwarding.
-- **Future SSL**: Certbot (Optional) should be used on the host to enable HTTPS.
+This application uses **Nginx Proxy Manager (NPM)** as the central reverse proxy. The application itself does not expose port `3000` directly to the host machine. Instead, it is securely connected to a shared Docker network named `web-network`.
+
+### Setting up Nginx Proxy Manager (if not present)
+1. Install NPM in an independent directory on the server (e.g., `~/npm`).
+2. Create the external docker network so NPM and the project can communicate:
+   ```bash
+   docker network create web-network
+   ```
+3. Make sure the NPM instance is connected to the same `web-network`.
+
+### Routing Traffic to This Project
+Our `docker-compose.yml` is already configured to attach the `app` container to `web-network`.
+After deploying the project (`docker compose up -d`), open your NPM Admin Panel (usually on port 81):
+
+1. Go to **Hosts > Proxy Hosts** and click **Add Proxy Host**.
+2. **Domain Names:** `lavyer.com`
+3. **Forward Hostname / IP:** `app`
+4. **Forward Port:** `3000`
+5. **Block Common Exploits:** Enable.
+6. **SSL Tab:** Select "Request a new SSL Certificate", check "Force SSL" and save.
+
 
 ## 6. Verification Checklist
 - [ ] `curl http://localhost/api/health` returns 200 OK.
