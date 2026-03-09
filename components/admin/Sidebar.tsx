@@ -20,6 +20,7 @@ export default function Sidebar() {
         { label: 'Hizmetler', href: '/admin/services' },
         { label: 'Şehirler', href: '/admin/cities' },
         { label: 'SSS', href: '/admin/faq' },
+        { label: 'Genel Ayarlar', href: '/admin/settings' },
     ];
 
     return (
