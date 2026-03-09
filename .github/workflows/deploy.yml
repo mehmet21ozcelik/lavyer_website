@@ -114,9 +114,9 @@ jobs:
             # Sync database schema
             docker compose exec -T app npx prisma db push
             
-            # Cleanup: Remove build cache and dangling images to save disk space
+            # Cleanup: Remove build cache and project-specific old images to save disk space
             docker builder prune -a -f
-            docker image prune -f
+            docker image prune -f --filter "label=project=lavyer"
             
             echo "Deployment successful!"
 

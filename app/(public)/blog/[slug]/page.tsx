@@ -20,40 +20,22 @@ export async function generateStaticParams() {
     }
 }
 
+import { getPostBySlug, getLatestPosts } from '@/lib/services/blog.service';
+
 export async function generateMetadata({ params }: { params: { slug: string } }) {
     return getBlogPostMetadata(params.slug);
 }
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-    const post = await prisma.blogPost.findUnique({
-        where: { slug: params.slug },
-        include: {
-            practiceArea: {
-                include: {
-                    cities: { include: { city: true } }
-                }
-            },
-            seo: true
-        }
-    });
+    const post = await getPostBySlug(params.slug);
 
     if (!post || post.status !== 'PUBLISHED') {
         notFound();
     }
 
     // Fetch recent posts for the sidebar
-    let recentPosts: any[] = [];
-    try {
-        recentPosts = await prisma.blogPost.findMany({
-            where: {
-                status: 'PUBLISHED',
-                id: { not: post.id } // Exclude current post
-            },
-            orderBy: { createdAt: 'desc' },
-            take: 5,
-            select: { id: true, title: true, slug: true, createdAt: true }
-        });
-    } catch (e) { }
+    const allRecentPosts = await getLatestPosts(6);
+    const recentPosts = allRecentPosts.filter(p => p.id !== post.id).slice(0, 5);
 
     const { title, content, seo, excerpt, createdAt, updatedAt } = post;
 

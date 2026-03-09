@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db/prisma';
+import { getPracticeAreas } from '@/lib/services/practiceArea.service';
 
 export const metadata = {
     title: 'Hizmetlerimiz | Diyarbakır Avukatlık Bürosu',
@@ -8,12 +8,7 @@ export const metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function ServicesPage() {
-    let areas: any[] = [];
-    try {
-        areas = await prisma.practiceArea.findMany({
-            orderBy: { name: 'asc' }
-        });
-    } catch (e) { }
+    const areas = await getPracticeAreas();
 
     return (
         <section className="section-padding" style={{ minHeight: '80vh', background: 'var(--background-color)' }}>

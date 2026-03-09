@@ -127,3 +127,22 @@ model Redirect {
   newSlug   String
   createdAt DateTime @default(now())
 }
+
+model SiteSettings {
+  id               String   @id @default("settings")
+  title            String   // Website Title
+  description      String   // Website Description
+  logoText         String?
+  email            String?
+  phone            String?
+  address          String?
+  officeHours      String?
+  facebookUrl      String?
+  instagramUrl     String?
+  linkedinUrl      String?
+  twitterUrl       String?
+  whatsappNumber   String?
+  googleMapsUrl    String?
+  registrationNo   String?  // Sicil No
+  updatedAt        DateTime @updatedAt
+}

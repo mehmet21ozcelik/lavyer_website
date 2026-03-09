@@ -1,39 +1,27 @@
 import { LegalServiceSchema } from '@/components/seo/SchemaOrg';
 import { prisma } from '@/lib/db/prisma';
 import Image from 'next/image';
+import { getSiteSettings } from '@/lib/services/settings.service';
+import { getPracticeAreas } from '@/lib/services/practiceArea.service';
+import { getLatestPosts } from '@/lib/services/blog.service';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  let practiceAreas: any[] = [];
-  try {
-    practiceAreas = await prisma.practiceArea.findMany({
-      take: 6,
-      orderBy: { name: 'asc' },
-      select: { id: true, name: true, slug: true, seo: true }
-    });
-  } catch (e) { }
-
-  let latestPosts: any[] = [];
-  try {
-    latestPosts = await prisma.blogPost.findMany({
-      take: 3,
-      where: { status: 'PUBLISHED' },
-      orderBy: { createdAt: 'desc' },
-      select: { id: true, title: true, slug: true, excerpt: true, createdAt: true, practiceArea: true }
-    });
-  } catch (e) { }
+  const settings = await getSiteSettings();
+  const practiceAreas = await getPracticeAreas();
+  const latestPosts = await getLatestPosts(3);
 
   return (
     <>
       <LegalServiceSchema
-        name="Diyarbakır Avukatlık Bürosu"
-        description="Diyarbakır merkezli profesyonel hukuki danışmanlık hizmeti."
+        name={settings?.title || "Diyarbakır Avukatlık Bürosu"}
+        description={settings?.description || "Diyarbakır merkezli profesyonel hukuki danışmanlık hizmeti."}
         url="https://www.diyarbakiravukat.com"
         logo="https://www.diyarbakiravukat.com/logo.png"
-        telephone="+905551234567"
+        telephone={settings?.phone || "+905551234567"}
         address={{
-          streetAddress: "Yenişehir Mahallesi, Adliye Karşısı No:1",
+          streetAddress: settings?.address?.split(',')[0] || "Yenişehir Mahallesi, Adliye Karşısı No:1",
           addressLocality: "Yenişehir",
           addressRegion: "Diyarbakır",
           postalCode: "21100",
@@ -47,9 +35,9 @@ export default async function Home() {
           <span style={{ color: 'var(--accent-color)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1rem', display: 'block' }}>
             Profesyonel Hukuki Çözümler
           </span>
-          <h1 style={{ color: 'white' }}>Adaletin Tesisi İçin Yanınızdayız.</h1>
+          <h1 style={{ color: 'white' }}>{settings?.title?.split('|')[0].trim() || 'Adaletin Tesisi İçin Yanınızdayız.'}</h1>
           <p style={{ maxWidth: '600px', fontSize: '1.25rem', color: 'rgba(255,255,255,0.8)', marginBottom: '2rem' }}>
-            Diyarbakır'da uzman ekibimizle boşanma, ceza ve iş hukuku başta olmak üzere profesyonel, şeffaf ve sonuç odaklı avukatlık hizmeti sunuyoruz.
+            {settings?.description || "Diyarbakır'da uzman ekibimizle boşanma, ceza ve iş hukuku başta olmak üzere profesyonel, şeffaf ve sonuç odaklı avukatlık hizmeti sunuyoruz."}
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
             <a href="/iletisim" className="btn btn-primary" style={{ padding: '1rem 2rem' }}>Ücretsiz Danışın</a>
@@ -67,7 +55,7 @@ export default async function Home() {
           </div>
           <div style={{ textAlign: 'center' }}>
             <h3 style={{ margin: 0 }}>Diyarbakır Barosu</h3>
-            <p style={{ margin: 0, fontSize: '0.875rem' }}>Sicil Numarası: 12345</p>
+            <p style={{ margin: 0, fontSize: '0.875rem' }}>Sicil Numarası: {settings?.registrationNo || '12345'}</p>
           </div>
           <div style={{ textAlign: 'center' }}>
             <h3 style={{ margin: 0 }}>10+ Yıl</h3>
@@ -168,7 +156,7 @@ export default async function Home() {
           <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '2rem' }}>
             Zaman kaybetmeyin. Profesyonel bir destek almak için hemen bize ulaşın. Whatsapp hattımız 7/24 hizmetinizde.
           </p>
-          <a href="https://wa.me/905551234567" className="btn btn-primary" style={{ background: '#25D366', color: 'white' }}>
+          <a href={`https://wa.me/${settings?.whatsappNumber || '905551234567'}`} className="btn btn-primary" style={{ background: '#25D366', color: 'white' }}>
             Whatsapp'tan Ulaşın
           </a>
         </div>

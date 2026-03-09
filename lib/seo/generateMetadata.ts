@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { prisma } from '@/lib/db/prisma';
+import { getSiteSettings } from '@/lib/services/settings.service';
 
 interface BaseSEOData {
     title: string;
@@ -9,11 +10,13 @@ interface BaseSEOData {
     noIndex: boolean;
 }
 
-export const buildMetadata = (data?: BaseSEOData | null, fallback?: Partial<Metadata>): Metadata => {
+export const buildMetadata = async (data?: BaseSEOData | null, fallback?: Partial<Metadata>): Promise<Metadata> => {
+    const settings = await getSiteSettings();
+
     if (!data) {
         return {
-            title: fallback?.title || 'Diyarbakır Avukatlık Bürosu',
-            description: fallback?.description || 'Diyarbakır hukuki danışmanlık ve avukatlık hizmetleri.',
+            title: fallback?.title || settings?.title || 'Diyarbakır Avukatlık Bürosu',
+            description: fallback?.description || settings?.description || 'Diyarbakır hukuki danışmanlık ve avukatlık hizmetleri.',
             ...fallback
         }
     }
@@ -47,7 +50,7 @@ export async function getCityPracticeAreaMetadata(citySlug: string, practiceArea
         include: { seo: true, city: true, practiceArea: true }
     });
 
-    return buildMetadata(data?.seo, {
+    return await buildMetadata(data?.seo, {
         title: `${data?.city.name || 'Diyarbakır'} ${data?.practiceArea.name || 'Avukatı'}`,
         description: `${data?.city.name} bölgesinde ${data?.practiceArea.name} alanında uzman avukatlık hizmeti.`
     });
@@ -59,7 +62,7 @@ export async function getBlogPostMetadata(slug: string): Promise<Metadata> {
         include: { seo: true }
     });
 
-    return buildMetadata(data?.seo, {
+    return await buildMetadata(data?.seo, {
         title: data?.title,
         description: data?.excerpt || data?.title
     });

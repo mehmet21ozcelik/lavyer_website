@@ -1,11 +1,18 @@
 import { Metadata } from 'next';
+import { getSiteSettings } from '@/lib/services/settings.service';
+import { buildMetadata } from '@/lib/seo/generateMetadata';
 
-export const metadata: Metadata = {
-    title: 'İletişim | Diyarbakır Avukatlık Bürosu',
-    description: 'Hukuki süreçlerinizde profesyonel destek almak için bize ulaşın. Diyarbakır merkezli avukatlık ofisimiz hizmetinizdedir.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+    return await buildMetadata({
+        title: 'İletişim | Diyarbakır Avukatlık Bürosu',
+        description: 'Hukuki süreçlerinizde profesyonel destek almak için bize ulaşın. Diyarbakır merkezli avukatlık ofisimiz hizmetinizdedir.',
+        noIndex: false
+    });
+}
 
-export default function ContactPage() {
+export default async function ContactPage() {
+    const settings = await getSiteSettings();
+
     return (
         <section className="section-padding" style={{ minHeight: '80vh', backgroundColor: 'var(--background-color)' }}>
             <div className="container" style={{ maxWidth: '1000px', margin: '0 auto' }}>
@@ -19,26 +26,29 @@ export default function ContactPage() {
                     <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                         <div>
                             <h3 style={{ borderBottom: '2px solid var(--secondary-color)', paddingBottom: '0.5rem', display: 'inline-block' }}>Adres</h3>
-                            <p style={{ marginTop: '1rem' }}>Yenişehir Mahallesi, Adliye Karşısı No:1</p>
-                            <p>Yenişehir / Diyarbakır</p>
+                            <p style={{ marginTop: '1rem' }}>{settings?.address || 'Yenişehir Mahallesi, Adliye Karşısı No:1, Yenişehir / Diyarbakır'}</p>
                         </div>
 
                         <div>
                             <h3 style={{ borderBottom: '2px solid var(--secondary-color)', paddingBottom: '0.5rem', display: 'inline-block' }}>Telefon</h3>
                             <p style={{ marginTop: '1rem', fontWeight: 600, fontSize: '1.2rem' }}>
-                                <a href="tel:+905551234567" style={{ color: 'var(--primary-color)' }}>+90 555 123 45 67</a>
+                                <a href={`tel:${settings?.phone?.replace(/\s+/g, '') || '+905551234567'}`} style={{ color: 'var(--primary-color)' }}>
+                                    {settings?.phone || '+90 555 123 45 67'}
+                                </a>
                             </p>
                         </div>
 
                         <div>
                             <h3 style={{ borderBottom: '2px solid var(--secondary-color)', paddingBottom: '0.5rem', display: 'inline-block' }}>E-Posta</h3>
                             <p style={{ marginTop: '1rem' }}>
-                                <a href="mailto:info@diyarbakiravukat.com" style={{ color: 'var(--primary-color)' }}>info@diyarbakiravukat.com</a>
+                                <a href={`mailto:${settings?.email || 'info@diyarbakiravukat.com'}`} style={{ color: 'var(--primary-color)' }}>
+                                    {settings?.email || 'info@diyarbakiravukat.com'}
+                                </a>
                             </p>
                         </div>
 
                         <div style={{ marginTop: 'auto', paddingTop: '1rem' }}>
-                            <a href="https://wa.me/905551234567" className="btn btn-primary" style={{ background: '#25D366', width: '100%', textAlign: 'center' }}>WhatsApp Üzerinden Ulaşın</a>
+                            <a href={`https://wa.me/${settings?.whatsappNumber || '905551234567'}`} className="btn btn-primary" style={{ background: '#25D366', width: '100%', textAlign: 'center' }}>WhatsApp Üzerinden Ulaşın</a>
                         </div>
                     </div>
 

@@ -32,6 +32,8 @@ RUN npm run build
 # Stage 3: Production server
 FROM node:20.12.2-alpine3.18 AS runner
 
+LABEL project=lavyer
+
 WORKDIR /app
 
 ENV NODE_ENV=production

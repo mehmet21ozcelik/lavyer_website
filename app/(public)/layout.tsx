@@ -1,37 +1,33 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import { Inter, Outfit } from 'next/font/google';
 import '../globals.css';
 import React from 'react';
 
+import { getSiteSettings } from '@/lib/services/settings.service';
+import { buildMetadata } from '@/lib/seo/generateMetadata';
+
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-heading' });
 
-export const metadata: Metadata = {
-  title: 'Diyarbakır Avukatlık Bürosu | Profesyonel Hukuki Danışmanlık',
-  description: 'Diyarbakır merkezli hukuk büromuz, boşanma, ceza, miras ve iş hukuku alanlarında profesyonel ve çözüm odaklı avukatlık hizmeti sunmaktadır.',
-  formatDetection: {
-    telephone: false,
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'tr_TR',
-    url: 'https://www.diyarbakiravukat.com', // Placeholder domain
-    siteName: 'Diyarbakır Avukatlık Bürosu',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return await buildMetadata();
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const settings = await getSiteSettings();
+
   return (
     <html lang="tr">
       <body className={`${inter.variable} ${outfit.variable}`}>
         <header>
           <div className="container">
             <a href="/" className="logo">
-              Hukuk<span>Bürosu</span>
+              {settings?.logoText || 'Hukuk'}{settings?.logoText ? '' : <span>Bürosu</span>}
             </a>
             <nav>
               <ul>
@@ -53,9 +49,11 @@ export default function RootLayout({
           <div className="container">
             <div className="footer-grid">
               <div>
-                <h3>Hukuk <span>Bürosu</span></h3>
-                <p>Diyarbakır'da öncü, dürüst ve güvenilir hukuki danışmanlık.</p>
-                <p><strong>Diyarbakır Barosu Sicil No:</strong> 12345</p>
+                <h3>{settings?.logoText || 'Hukuk Bürosu'}</h3>
+                <p>{settings?.description || "Diyarbakır'da öncü, dürüst ve güvenilir hukuki danışmanlık."}</p>
+                {settings?.registrationNo && (
+                  <p><strong>Diyarbakır Barosu Sicil No:</strong> {settings.registrationNo}</p>
+                )}
               </div>
               <div>
                 <h3>Hızlı Bağlantılar</h3>
@@ -69,13 +67,13 @@ export default function RootLayout({
               </div>
               <div>
                 <h3>İletişim</h3>
-                <p>Adres: Yenişehir Mahallesi, Adliye Karşısı No:1, Yenişehir/Diyarbakır</p>
-                <p>Email: info@diyarbakiravukat.com</p>
-                <p>Tel: +90 555 123 4567</p>
+                <p>Adres: {settings?.address || 'Yenişehir Mahallesi, Adliye Karşısı No:1, Yenişehir/Diyarbakır'}</p>
+                <p>Email: {settings?.email || 'info@diyarbakiravukat.com'}</p>
+                <p>Tel: {settings?.phone || '+90 555 123 4567'}</p>
               </div>
             </div>
             <div className="footer-bottom">
-              <p>&copy; {new Date().getFullYear()} Hukuk Bürosu. Tüm Hakları Saklıdır. | Diyarbakır Avukat</p>
+              <p>&copy; {new Date().getFullYear()} {settings?.logoText || 'Hukuk Bürosu'}. Tüm Hakları Saklıdır. | Diyarbakır Avukat</p>
             </div>
           </div>
         </footer>

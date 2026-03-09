@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db/prisma';
+import { getPaginatedPosts } from '@/lib/services/blog.service';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -17,30 +17,7 @@ export default async function BlogPage({
     const currentPage = Number(searchParams.page) || 1;
     const postsPerPage = 6;
 
-    let posts: any[] = [];
-    let totalPosts = 0;
-
-    try {
-        totalPosts = await prisma.blogPost.count({
-            where: { status: 'PUBLISHED' }
-        });
-
-        posts = await prisma.blogPost.findMany({
-            take: postsPerPage,
-            skip: (currentPage - 1) * postsPerPage,
-            where: { status: 'PUBLISHED' },
-            orderBy: { createdAt: 'desc' },
-            select: {
-                id: true,
-                title: true,
-                slug: true,
-                excerpt: true,
-                createdAt: true,
-                practiceArea: true,
-                seo: true
-            }
-        });
-    } catch (e) { console.warn('DB skipped.'); }
+    const { posts, total: totalPosts } = await getPaginatedPosts(currentPage, postsPerPage);
 
     const totalPages = Math.ceil(totalPosts / postsPerPage);
 

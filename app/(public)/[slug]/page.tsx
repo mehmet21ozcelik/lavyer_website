@@ -35,12 +35,11 @@ export async function generateStaticParams() {
     }
 }
 
+import { getPracticeAreaBySlug } from '@/lib/services/practiceArea.service';
+
 export async function generateMetadata({ params }: { params: { slug: string } }) {
     // Check if it's a National page purely by slug
-    const nationalArea = await prisma.practiceArea.findUnique({
-        where: { slug: params.slug },
-        include: { seo: true }
-    });
+    const nationalArea = await getPracticeAreaBySlug(params.slug);
 
     if (nationalArea) {
         return {
@@ -75,17 +74,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export default async function NationalOrInfoPage({ params }: { params: { slug: string } }) {
     // 1. Determine if National Page
-    const nationalArea = await prisma.practiceArea.findUnique({
-        where: { slug: params.slug },
-        include: {
-            faqs: { orderBy: { order: 'asc' } },
-            blogPosts: {
-                where: { status: 'PUBLISHED' },
-                take: 5,
-                orderBy: { createdAt: 'desc' }
-            }
-        }
-    });
+    const nationalArea = await getPracticeAreaBySlug(params.slug);
 
     if (nationalArea) {
         return renderNationalPage(nationalArea, params.slug);
