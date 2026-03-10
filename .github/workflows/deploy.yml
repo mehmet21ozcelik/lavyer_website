@@ -106,7 +106,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd lavyer_website
+            cd /home/mcp-admin/lavyer_website
             # Fetch and reset to avoid local conflict issues
             git fetch origin master
             git reset --hard origin/master

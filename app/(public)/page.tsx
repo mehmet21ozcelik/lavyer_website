@@ -30,36 +30,49 @@ export default async function Home() {
       />
 
       {/* Hero Section */}
-      <section className="section-padding" style={{ background: 'var(--primary-color)', color: 'white', position: 'relative', overflow: 'hidden' }}>
+      <section className="section-padding" style={{
+        background: 'linear-gradient(135deg, var(--primary-color) 0%, #1e293b 100%)',
+        color: 'white',
+        position: 'relative',
+        overflow: 'hidden',
+        borderBottom: '4px solid var(--secondary-color)'
+      }}>
+        {/* Decorative element */}
+        <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: '400px', height: '400px', background: 'var(--secondary-color)', opacity: 0.05, borderRadius: '50%', filter: 'blur(80px)' }}></div>
+
         <div className="container animate-fade-in" style={{ position: 'relative', zIndex: 10 }}>
-          <span style={{ color: 'var(--accent-color)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1rem', display: 'block' }}>
-            Profesyonel Hukuki Çözümler
+          <span style={{ color: 'var(--accent-color)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ width: '40px', height: '1px', background: 'var(--accent-color)' }}></span>
+            Diyarbakır Hukuki Rehberlik
           </span>
-          <h1 style={{ color: 'white' }}>{settings?.title?.split('|')[0].trim() || 'Adaletin Tesisi İçin Yanınızdayız.'}</h1>
-          <p style={{ maxWidth: '600px', fontSize: '1.25rem', color: 'rgba(255,255,255,0.8)', marginBottom: '2rem' }}>
-            {settings?.description || "Diyarbakır'da uzman ekibimizle boşanma, ceza ve iş hukuku başta olmak üzere profesyonel, şeffaf ve sonuç odaklı avukatlık hizmeti sunuyoruz."}
+          <h1 style={{ color: 'white', maxWidth: '800px', marginBottom: '1.5rem' }}>{settings?.title?.split('|')[0].trim() || 'Adaletin Tesisi İçin Yanınızdayız.'}</h1>
+          <p style={{ maxWidth: '650px', fontSize: '1.25rem', color: 'rgba(255,255,255,0.8)', marginBottom: '3rem', lineHeight: '1.8' }}>
+            {settings?.description || "Diyarbakır'da uzman ekibimizle profesyonel, şeffaf ve sonuç odaklı avukatlık hizmeti sunuyoruz. Haklarınızın korunması sürecinde güvenilir çözüm ortağınız."}
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-            <a href="/iletisim" className="btn btn-primary" style={{ padding: '1rem 2rem' }}>Ücretsiz Danışın</a>
-            <a href="/hizmetler" className="btn btn-secondary" style={{ padding: '1rem 2rem', color: 'white', borderColor: 'white' }}>Uzmanlıklarımız</a>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem' }}>
+            <a href="/iletisim" className="btn btn-primary" style={{ padding: '1.25rem 2.5rem' }}>İletişim & Randevu</a>
+            <a href="/hizmetler" className="btn btn-secondary" style={{ padding: '1.25rem 2.5rem', color: 'white', borderColor: 'rgba(255,255,255,0.4)' }}>Çalışma Alanlarımız</a>
           </div>
         </div>
       </section>
 
-      {/* Trust Indicators */}
-      <section style={{ background: 'var(--glass-bg)', borderBottom: '1px solid var(--border-color)', padding: '2rem 0' }}>
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: '2rem' }}>
+      {/* Service Principles (Replaces prohibited trust indicators) */}
+      <section style={{ background: 'var(--white)', borderBottom: '1px solid var(--border-color)', padding: '4rem 0' }}>
+        <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '3rem' }}>
           <div style={{ textAlign: 'center' }}>
-            <h3 style={{ margin: 0 }}>400+</h3>
-            <p style={{ margin: 0, fontSize: '0.875rem' }}>Başarılı Dava</p>
+            <div style={{ color: 'var(--secondary-color)', fontSize: '2rem', marginBottom: '1rem' }}>⚖️</div>
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Şeffaflık</h3>
+            <p style={{ fontSize: '0.95rem', margin: 0 }}>Sürecin her aşamasında müvekkillerimizi detaylı ve zamanında bilgilendiriyoruz.</p>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <h3 style={{ margin: 0 }}>Diyarbakır Barosu</h3>
-            <p style={{ margin: 0, fontSize: '0.875rem' }}>Sicil Numarası: {settings?.registrationNo || '12345'}</p>
+            <div style={{ color: 'var(--secondary-color)', fontSize: '2rem', marginBottom: '1rem' }}>🛡️</div>
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Gizlilik</h3>
+            <p style={{ fontSize: '0.95rem', margin: 0 }}>Müvekkil verilerini ve hukuki süreçleri en üst düzey mesleki etik ve gizlilikle koruyoruz.</p>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <h3 style={{ margin: 0 }}>10+ Yıl</h3>
-            <p style={{ margin: 0, fontSize: '0.875rem' }}>Mesleki Tecrübe</p>
+            <div style={{ color: 'var(--secondary-color)', fontSize: '2rem', marginBottom: '1rem' }}>🎓</div>
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Uzmanlık</h3>
+            <p style={{ fontSize: '0.95rem', margin: 0 }}>Güncel mevzuat ve Yargıtay içtihatları doğrultusunda nitelikli hukuki destek sağlıyoruz.</p>
           </div>
         </div>
       </section>
@@ -150,14 +163,14 @@ export default async function Home() {
       </section>
 
       {/* Call to Action Banner */}
-      <section className="section-padding" style={{ background: 'var(--text-primary)', color: 'white', textAlign: 'center' }}>
+      <section className="section-padding" style={{ background: 'var(--primary-color)', color: 'white', textAlign: 'center', position: 'relative' }}>
         <div className="container">
-          <h2 style={{ color: 'white' }}>Acil Hukuki Desteğe mi İhtiyacınız Var?</h2>
-          <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '2rem' }}>
-            Zaman kaybetmeyin. Profesyonel bir destek almak için hemen bize ulaşın. Whatsapp hattımız 7/24 hizmetinizde.
+          <h2 style={{ color: 'white' }}>Hukuki Sorularınız İçin Bize Ulaşın</h2>
+          <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '2rem', maxWidth: '700px', margin: '0 auto 2rem' }}>
+            Haklarınızın korunması ve hukuki süreçleriniz hakkında bilgi almak için profesyonel ekibimizle iletişime geçebilirsiniz.
           </p>
-          <a href={`https://wa.me/${settings?.whatsappNumber || '905551234567'}`} className="btn btn-primary" style={{ background: '#25D366', color: 'white' }}>
-            Whatsapp'tan Ulaşın
+          <a href={`https://wa.me/${settings?.whatsappNumber || '905551234567'}`} className="btn btn-primary" style={{ background: '#25D366', color: 'white', border: 'none', padding: '1rem 2rem' }}>
+            <span style={{ marginRight: '0.5rem' }}>📱</span> WhatsApp Randevu Hattı
           </a>
         </div>
       </section>

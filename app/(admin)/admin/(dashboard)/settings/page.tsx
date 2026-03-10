@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import AdminPageHeader from '@/components/admin/AdminPageHeader';
 import { useRouter } from 'next/navigation';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 export default function SettingsPage() {
     const router = useRouter();
@@ -171,6 +172,17 @@ export default function SettingsPage() {
                                 onChange={e => setSettings({ ...settings, linkedinUrl: e.target.value })}
                             />
                         </div>
+                    </div>
+                </div>
+
+                {/* Hakkımızda İçeriği */}
+                <div style={{ marginTop: '2rem' }}>
+                    <h3 style={{ marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>Hakkımızda Sayfası İçeriği</h3>
+                    <div style={{ backgroundColor: 'white' }}>
+                        <RichTextEditor
+                            content={settings?.aboutContent || ''}
+                            onChange={(html) => setSettings({ ...settings, aboutContent: html })}
+                        />
                     </div>
                 </div>
 

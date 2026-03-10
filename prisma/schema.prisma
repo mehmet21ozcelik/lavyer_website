@@ -137,6 +137,7 @@ model SiteSettings {
   phone            String?
   address          String?
   officeHours      String?
+  aboutContent     String?  @db.Text
   facebookUrl      String?
   instagramUrl     String?
   linkedinUrl      String?

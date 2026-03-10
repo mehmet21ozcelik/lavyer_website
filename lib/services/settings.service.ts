@@ -23,6 +23,7 @@ export const getSiteSettings = unstable_cache(
                     whatsappNumber: '905551234567',
                     registrationNo: '12345',
                     officeHours: 'Pazartesi - Cuma: 09:00 - 18:00',
+                    aboutContent: '<h1>Hakkımızda</h1><p>Diyarbakır\'da uzman ekibimizle profesyonel hukuki danışmanlık hizmeti sunuyoruz.</p>',
                     facebookUrl: null,
                     instagramUrl: null,
                     linkedinUrl: null,
